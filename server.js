@@ -4,7 +4,7 @@ const path = require("path");
 
 const HOST = "0.0.0.0";
 const DISPLAY_HOST = "localhost";
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const INDEX_PATH = path.join(__dirname, "index.html");
 
 let pending = false;
