@@ -11,8 +11,15 @@ let pending = false;
 let lastTriggerAt = 0;
 let lastPollAt = 0;
 
+const addCors = (res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+};
+
 const sendJson = (res, status, payload) => {
   const body = JSON.stringify(payload);
+  addCors(res);
   res.writeHead(status, {
     "Content-Type": "application/json",
     "Content-Length": Buffer.byteLength(body)
@@ -43,6 +50,13 @@ const parseBody = (req) =>
   });
 
 const server = http.createServer(async (req, res) => {
+  if (req.method === "OPTIONS") {
+    addCors(res);
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   if (req.method === "GET" && req.url === "/") {
     fs.readFile(INDEX_PATH, (err, data) => {
       if (err) {
